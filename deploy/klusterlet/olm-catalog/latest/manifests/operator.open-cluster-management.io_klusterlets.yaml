@@ -47,6 +47,7 @@ spec:
                 description: |-
                   clusterName is the name of the managed cluster to be created on hub.
                   The Klusterlet agent generates a random name if it is not set, or discovers the appropriate cluster name on OpenShift.
+                  It must be set when reporting the hosting cluster in Default or Singleton mode.
                 maxLength: 63
                 pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                 type: string
@@ -63,6 +64,7 @@ spec:
                           ManagementClusterName is the name (as known to the hub) of the cluster where this
                           klusterlet's controllers actually run, for a mode where that's a separate management
                           cluster rather than the klusterlet running locally.
+                          It must be set when reporting the hosting cluster in Hosted or SingletonHosted mode.
                         type: string
                     type: object
                   mode:
@@ -83,7 +85,7 @@ spec:
                       Hosted.ManagementClusterName when they run on a separate management cluster - via a
                       reserved ClusterClaim named "hosting-cluster.open-cluster-management.io". Disabled by
                       default: the klusterlet-operator emits nothing and behaves exactly as it does today unless
-                      this is explicitly set to Enable.
+                      this is explicitly set to Enable. ClusterClaim cannot be disabled while reporting is enabled.
                     enum:
                     - Enable
                     - Disable
@@ -578,6 +580,26 @@ spec:
                   quay.io/open-cluster-management.io/work:latest will be used if unspecified.
                 type: string
             type: object
+            x-kubernetes-validations:
+            - message: spec.clusterName is required when reporting the hosting cluster
+                in Default or Singleton mode
+              rule: '!has(self.deployOption) || !has(self.deployOption.reportHostingCluster)
+                || self.deployOption.reportHostingCluster != ''Enable'' || (has(self.deployOption.mode)
+                && self.deployOption.mode in [''Hosted'', ''SingletonHosted'']) ||
+                has(self.clusterName)'
+            - message: spec.deployOption.hosted.managementClusterName is required
+                when reporting the hosting cluster in Hosted or SingletonHosted mode
+              rule: '!has(self.deployOption) || !has(self.deployOption.reportHostingCluster)
+                || self.deployOption.reportHostingCluster != ''Enable'' || !has(self.deployOption.mode)
+                || !(self.deployOption.mode in [''Hosted'', ''SingletonHosted''])
+                || (has(self.deployOption.hosted) && has(self.deployOption.hosted.managementClusterName)
+                && self.deployOption.hosted.managementClusterName.size() > 0)'
+            - message: ClusterClaim cannot be disabled when spec.deployOption.reportHostingCluster
+                is enabled
+              rule: '!has(self.deployOption) || !has(self.deployOption.reportHostingCluster)
+                || self.deployOption.reportHostingCluster != ''Enable'' || !has(self.registrationConfiguration)
+                || !has(self.registrationConfiguration.featureGates) || !self.registrationConfiguration.featureGates.exists(f,
+                f.feature == ''ClusterClaim'' && (!has(f.mode) || f.mode == ''Disable''))'
           status:
             description: Status represents the current status of Klusterlet agent.
             properties:

@@ -279,6 +279,8 @@ github.com/joshdk/go-junit v1.0.0 h1:S86cUKIdwBHWwA6xCmFlf3RTLfVXYQfvanM5Uh+K6GE
 github.com/joshdk/go-junit v1.0.0/go.mod h1:TiiV0PqkaNfFXjEiyjWM3XXrhVyCa1K4Zfga6W52ung=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
+github.com/kahirokunn/api v1.3.1-0.20260904090248-87af7d144912 h1:8Aqz17lcOejuiQU84uSQRxgqkM0VCpNZB1VkjKcQb+E=
+github.com/kahirokunn/api v1.3.1-0.20260904090248-87af7d144912/go.mod h1:/qLKuMbMS1+MpirTjaw4BoS3INKG8jV3s5J7iju48tg=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.19.1 h1:VsB4HPswih7mmZ8WleSFQ75c/Ui1M4trX5oAsJnhSlk=
@@ -612,8 +614,6 @@ k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2 h1:AZYQSJemyQB5eRxqcPky+/7EdBj0x
 k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2/go.mod h1:xDxuJ0whA3d0I4mf/C4ppKHxXynQ+fxnkmQH0vTHnuk=
 open-cluster-management.io/addon-framework v1.3.1-0.20260902141743-f80fc02deef8 h1:o+4bAm/looOMKU9qggnWiDrDFAgsWJJQkgUqLQqWiP4=
 open-cluster-management.io/addon-framework v1.3.1-0.20260902141743-f80fc02deef8/go.mod h1:q/zcesupa1i+GK/J6Dnx8JhR44KI2LxGk3DSynTGpgY=
-open-cluster-management.io/api v1.3.1-0.20260826151356-f3f2452d45ee h1:1zs7cXGRyMqw9IbuAQgo4TnsHENiLee4adiltzhBJhA=
-open-cluster-management.io/api v1.3.1-0.20260826151356-f3f2452d45ee/go.mod h1:/qLKuMbMS1+MpirTjaw4BoS3INKG8jV3s5J7iju48tg=
 open-cluster-management.io/sdk-go v1.3.1-0.20260713072928-c812bc0c3b06 h1:gpk3LkPj0zMI8lt0A619JQ5KzB5RjxQob5eiF7zeZ28=
 open-cluster-management.io/sdk-go v1.3.1-0.20260713072928-c812bc0c3b06/go.mod h1:j2M5g9Shhgvh9Y79/T7ZI1iyokZKaZ7ricRa9yHrzd8=
 sigs.k8s.io/about-api v0.0.0-20250131010323-518069c31c03 h1:1ShFiMjGQOR/8jTBkmZrk1gORxnvMwm1nOy2/DbHg4U=

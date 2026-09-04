@@ -28,6 +28,9 @@ type Klusterlet struct {
 }
 
 // KlusterletSpec represents the desired deployment configuration of Klusterlet agent.
+// +kubebuilder:validation:XValidation:rule="!has(self.deployOption) || !has(self.deployOption.reportHostingCluster) || self.deployOption.reportHostingCluster != 'Enable' || (has(self.deployOption.mode) && self.deployOption.mode in ['Hosted', 'SingletonHosted']) || has(self.clusterName)",message="spec.clusterName is required when reporting the hosting cluster in Default or Singleton mode"
+// +kubebuilder:validation:XValidation:rule="!has(self.deployOption) || !has(self.deployOption.reportHostingCluster) || self.deployOption.reportHostingCluster != 'Enable' || !has(self.deployOption.mode) || !(self.deployOption.mode in ['Hosted', 'SingletonHosted']) || (has(self.deployOption.hosted) && has(self.deployOption.hosted.managementClusterName) && self.deployOption.hosted.managementClusterName.size() > 0)",message="spec.deployOption.hosted.managementClusterName is required when reporting the hosting cluster in Hosted or SingletonHosted mode"
+// +kubebuilder:validation:XValidation:rule="!has(self.deployOption) || !has(self.deployOption.reportHostingCluster) || self.deployOption.reportHostingCluster != 'Enable' || !has(self.registrationConfiguration) || !has(self.registrationConfiguration.featureGates) || !self.registrationConfiguration.featureGates.exists(f, f.feature == 'ClusterClaim' && (!has(f.mode) || f.mode == 'Disable'))",message="ClusterClaim cannot be disabled when spec.deployOption.reportHostingCluster is enabled"
 type KlusterletSpec struct {
 	// namespace is the namespace to deploy the agent on the managed cluster.
 	// The namespace must have a prefix of "open-cluster-management-", and if it is not set,
@@ -59,6 +62,7 @@ type KlusterletSpec struct {
 
 	// clusterName is the name of the managed cluster to be created on hub.
 	// The Klusterlet agent generates a random name if it is not set, or discovers the appropriate cluster name on OpenShift.
+	// It must be set when reporting the hosting cluster in Default or Singleton mode.
 	// +optional
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:Pattern=^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
@@ -377,7 +381,7 @@ type KlusterletDeployOption struct {
 	// Hosted.ManagementClusterName when they run on a separate management cluster - via a
 	// reserved ClusterClaim named "hosting-cluster.open-cluster-management.io". Disabled by
 	// default: the klusterlet-operator emits nothing and behaves exactly as it does today unless
-	// this is explicitly set to Enable.
+	// this is explicitly set to Enable. ClusterClaim cannot be disabled while reporting is enabled.
 	// +optional
 	ReportHostingCluster ReportHostingClusterMode `json:"reportHostingCluster,omitempty"`
 
@@ -405,6 +409,7 @@ type KlusterletHostedConfiguration struct {
 	// ManagementClusterName is the name (as known to the hub) of the cluster where this
 	// klusterlet's controllers actually run, for a mode where that's a separate management
 	// cluster rather than the klusterlet running locally.
+	// It must be set when reporting the hosting cluster in Hosted or SingletonHosted mode.
 	// +optional
 	ManagementClusterName string `json:"managementClusterName,omitempty"`
 }
